@@ -1,0 +1,28 @@
+#!/bin/bash
+
+set -x -euo pipefail
+
+tag="quay.io/goodguide/coreos-toolbox"
+
+git_revision="$(git rev-parse HEAD)"
+
+if ! git diff --quiet; then
+		git_revision="${git_revision}-dirty"
+fi
+
+file=Dockerfile
+
+docker build \
+			 --pull \
+			 --file "${file}" \
+			 --tag "${tag}" \
+			 --label "com.goodguide.base-image.coreos-toolbox.git-revision=$git_revision" \
+			 .
+
+[[ ${template_file:-} ]] && rm "${file}"
+
+if [[ ${TRAVIS_BUILD_NUMBER:-} ]]; then
+  docker push "${tag}"
+  docker tag "${tag}" "${tag}:${TRAVIS_BUILD_NUMBER}"
+  docker push "${tag}:${TRAVIS_BUILD_NUMBER}"
+fi

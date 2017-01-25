@@ -5,6 +5,7 @@ RUN apk -U add \
       drill \
       htop \
       iproute2 \
+      man \
       py2-pip \
       tmux
 

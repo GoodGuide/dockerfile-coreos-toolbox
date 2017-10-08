@@ -1,13 +1,17 @@
-FROM quay.io/goodguide/base:alpine-3.5-7
+FROM quay.io/goodguide/base:ubuntu-16.10
 
-RUN apk -U add \
-      docker \
-      drill \
+RUN apt-get update \
+ && apt-get install -y \
+      docker.io \
       htop \
       iproute2 \
+      ldnsutils \
       man \
-      py2-pip \
+      python3-pip \
+      python3-setuptools \
       tmux
 
-RUN pip install --upgrade pip \
- && pip install awscli
+RUN pip3 install --upgrade pip \
+ && pip3 install awscli
+
+CMD ["/bin/bash"]
